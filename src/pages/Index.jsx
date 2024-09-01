@@ -58,7 +58,7 @@ const Index = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Linked Data Graaf Zoeken</h1>
+      <h1 className="text-2xl font-bold mb-4">PoC federatieve catalogus</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Input
