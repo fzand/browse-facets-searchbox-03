@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -10,7 +9,7 @@ const Index = () => {
   const [freeTextSearch, setFreeTextSearch] = useState('');
   const [autocompleteSearch, setAutocompleteSearch] = useState('');
   const [facets, setFacets] = useState({
-    thema: false,
+    thema: '',
     organization: '',
     bron: '',
   });
@@ -30,6 +29,21 @@ const Index = () => {
     "Begrippenkaders",
     "Informatiemodellen",
     "Datasets"
+  ];
+
+  const themas = [
+    "Klimaatverandering",
+    "Digitale Transformatie",
+    "Duurzame Energie",
+    "Kunstmatige Intelligentie",
+    "Biodiversiteit",
+    "Circulaire Economie",
+    "Smart Cities",
+    "Gezondheidszorg Innovatie",
+    "Ruimte-exploratie",
+    "Oceaanbehoud",
+    "Voedselzekerheid",
+    "Cyberveiligheid"
   ];
 
   const handleSearch = () => {
@@ -63,46 +77,25 @@ const Index = () => {
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Facet Search</h2>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-4">
           {Object.entries(facets).map(([key, value]) => (
-            key === 'organization' ? (
-              <div key={key} className="flex items-center space-x-2">
-                <Select onValueChange={(value) => setFacets({ ...facets, organization: value })}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select organization" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {organizations.map((org) => (
-                      <SelectItem key={org} value={org}>{org}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : key === 'bron' ? (
-              <div key={key} className="flex items-center space-x-2">
-                <Select onValueChange={(value) => setFacets({ ...facets, bron: value })}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select bron" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bronnen.map((bron) => (
-                      <SelectItem key={bron} value={bron}>{bron}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div key={key} className="flex items-center space-x-2">
-                <Checkbox
-                  id={key}
-                  checked={value}
-                  onCheckedChange={(checked) => setFacets({ ...facets, [key]: checked })}
-                />
-                <Label htmlFor={key}>
-                  {key === 'thema' ? 'Thema' : key.charAt(0).toUpperCase() + key.slice(1)}
-                </Label>
-              </div>
-            )
+            <div key={key} className="flex items-center space-x-2">
+              <Label htmlFor={key} className="w-24">
+                {key.charAt(0).toUpperCase() + key.slice(1)}:
+              </Label>
+              <Select onValueChange={(value) => setFacets({ ...facets, [key]: value })}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={`Select ${key}`} />
+                </SelectTrigger>
+                <SelectContent>
+                  {(key === 'organization' ? organizations :
+                    key === 'bron' ? bronnen :
+                    themas).map((item) => (
+                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           ))}
         </div>
       </div>
