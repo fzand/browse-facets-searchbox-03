@@ -5,6 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+// Mock function to simulate querying a linked data graph
+const queryLinkedDataGraph = async (query, facets) => {
+  // Simulating an API call delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  // Mock data
+  const mockData = [
+    { label: 'Thema\'s', aantal: Math.floor(Math.random() * 20) + 1 },
+    { label: 'Organisaties', aantal: Math.floor(Math.random() * 15) + 1 },
+    { label: 'Bronnen', aantal: Math.floor(Math.random() * 10) + 1 },
+  ];
+
+  // Filter based on query and facets
+  return mockData.map(item => ({
+    ...item,
+    aantal: item.aantal - (query.length + Object.values(facets).filter(Boolean).length)
+  })).filter(item => item.aantal > 0);
+};
+
 const Index = () => {
   const [vrijeTekstZoeken, setVrijeTekstZoeken] = useState('');
   const [autocompleteZoeken, setAutocompleteZoeken] = useState('');
@@ -14,6 +33,7 @@ const Index = () => {
     bron: '',
   });
   const [zoekResultaten, setZoekResultaten] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const organisaties = [
     "TechInnovatie BV",
@@ -46,14 +66,17 @@ const Index = () => {
     "Cyberveiligheid"
   ];
 
-  const handleZoeken = () => {
-    // Gesimuleerde zoekresultaten (vervang door daadwerkelijke API-aanroep)
-    const nepResultaten = [
-      { type: 'Thema', label: 'Thema\'s', aantal: 15 },
-      { type: 'Organisatie', label: 'Organisaties', aantal: 8 },
-      { type: 'Bron', label: 'Bronnen', aantal: 12 },
-    ];
-    setZoekResultaten(nepResultaten);
+  const handleZoeken = async () => {
+    setIsLoading(true);
+    try {
+      const resultaten = await queryLinkedDataGraph(vrijeTekstZoeken, facetten);
+      setZoekResultaten(resultaten);
+    } catch (error) {
+      console.error("Error searching linked data graph:", error);
+      // Handle error (e.g., show error message to user)
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -100,7 +123,9 @@ const Index = () => {
         </div>
       </div>
 
-      <Button onClick={handleZoeken} className="mb-4">Zoeken</Button>
+      <Button onClick={handleZoeken} className="mb-4" disabled={isLoading}>
+        {isLoading ? 'Zoeken...' : 'Zoeken'}
+      </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {zoekResultaten.map((resultaat, index) => (
