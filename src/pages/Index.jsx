@@ -12,7 +12,7 @@ const Index = () => {
   const [facets, setFacets] = useState({
     thema: false,
     organization: '',
-    place: false,
+    bron: '',
   });
   const [searchResults, setSearchResults] = useState([]);
 
@@ -26,12 +26,18 @@ const Index = () => {
     "SpaceVoyage Enterprises"
   ];
 
+  const bronnen = [
+    "Begrippenkaders",
+    "Informatiemodellen",
+    "Datasets"
+  ];
+
   const handleSearch = () => {
     // Simulated search results (replace with actual API call)
     const mockResults = [
       { type: 'Thema', label: 'Themes', count: 15 },
       { type: 'Organization', label: 'Organizations', count: 8 },
-      { type: 'Place', label: 'Places', count: 12 },
+      { type: 'Bron', label: 'Sources', count: 12 },
     ];
     setSearchResults(mockResults);
   };
@@ -68,6 +74,19 @@ const Index = () => {
                   <SelectContent>
                     {organizations.map((org) => (
                       <SelectItem key={org} value={org}>{org}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : key === 'bron' ? (
+              <div key={key} className="flex items-center space-x-2">
+                <Select onValueChange={(value) => setFacets({ ...facets, bron: value })}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select bron" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bronnen.map((bron) => (
+                      <SelectItem key={bron} value={bron}>{bron}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
