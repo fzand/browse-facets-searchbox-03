@@ -69,7 +69,6 @@ const SearchPage = () => {
               <CardTitle>{resultaat.label}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Type: {resultaat.type}</p>
               <p>Resultaten: {resultaat.aantal}</p>
             </CardContent>
           </Card>
