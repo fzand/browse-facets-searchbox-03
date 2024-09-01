@@ -6,23 +6,23 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Index = () => {
-  const [freeTextSearch, setFreeTextSearch] = useState('');
-  const [autocompleteSearch, setAutocompleteSearch] = useState('');
-  const [facets, setFacets] = useState({
+  const [vrijeTekstZoeken, setVrijeTekstZoeken] = useState('');
+  const [autocompleteZoeken, setAutocompleteZoeken] = useState('');
+  const [facetten, setFacetten] = useState({
     thema: '',
-    organization: '',
+    organisatie: '',
     bron: '',
   });
-  const [searchResults, setSearchResults] = useState([]);
+  const [zoekResultaten, setZoekResultaten] = useState([]);
 
-  const organizations = [
-    "TechInnovate Corp",
-    "GreenEarth Solutions",
-    "GlobalHealth Initiative",
-    "FinanceWise Group",
-    "EduFuture Academy",
-    "ArtisanCraft Collective",
-    "SpaceVoyage Enterprises"
+  const organisaties = [
+    "TechInnovatie BV",
+    "GroeneAarde Oplossingen",
+    "Wereldgezondheid Initiatief",
+    "FinanciënWijs Groep",
+    "OnderwijsToekomst Academie",
+    "AmbachtKunst Collectief",
+    "RuimteReis Ondernemingen"
   ];
 
   const bronnen = [
@@ -38,7 +38,7 @@ const Index = () => {
     "Kunstmatige Intelligentie",
     "Biodiversiteit",
     "Circulaire Economie",
-    "Smart Cities",
+    "Slimme Steden",
     "Gezondheidszorg Innovatie",
     "Ruimte-exploratie",
     "Oceaanbehoud",
@@ -46,49 +46,49 @@ const Index = () => {
     "Cyberveiligheid"
   ];
 
-  const handleSearch = () => {
-    // Simulated search results (replace with actual API call)
-    const mockResults = [
-      { type: 'Thema', label: 'Themes', count: 15 },
-      { type: 'Organization', label: 'Organizations', count: 8 },
-      { type: 'Bron', label: 'Sources', count: 12 },
+  const handleZoeken = () => {
+    // Gesimuleerde zoekresultaten (vervang door daadwerkelijke API-aanroep)
+    const nepResultaten = [
+      { type: 'Thema', label: 'Thema\'s', aantal: 15 },
+      { type: 'Organisatie', label: 'Organisaties', aantal: 8 },
+      { type: 'Bron', label: 'Bronnen', aantal: 12 },
     ];
-    setSearchResults(mockResults);
+    setZoekResultaten(nepResultaten);
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Linked Data Graph Search</h1>
+      <h1 className="text-2xl font-bold mb-4">Linked Data Graaf Zoeken</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Input
           type="text"
-          placeholder="Free text search"
-          value={freeTextSearch}
-          onChange={(e) => setFreeTextSearch(e.target.value)}
+          placeholder="Vrije tekst zoeken"
+          value={vrijeTekstZoeken}
+          onChange={(e) => setVrijeTekstZoeken(e.target.value)}
         />
         <Input
           type="text"
-          placeholder="Autocomplete search"
-          value={autocompleteSearch}
-          onChange={(e) => setAutocompleteSearch(e.target.value)}
+          placeholder="Autocomplete zoeken"
+          value={autocompleteZoeken}
+          onChange={(e) => setAutocompleteZoeken(e.target.value)}
         />
       </div>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Facet Search</h2>
+        <h2 className="text-lg font-semibold mb-2">Facet Zoeken</h2>
         <div className="flex flex-wrap gap-4">
-          {Object.entries(facets).map(([key, value]) => (
+          {Object.entries(facetten).map(([key, value]) => (
             <div key={key} className="flex items-center space-x-2">
               <Label htmlFor={key} className="w-24">
                 {key.charAt(0).toUpperCase() + key.slice(1)}:
               </Label>
-              <Select onValueChange={(value) => setFacets({ ...facets, [key]: value })}>
+              <Select onValueChange={(value) => setFacetten({ ...facetten, [key]: value })}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={`Select ${key}`} />
+                  <SelectValue placeholder={`Selecteer ${key}`} />
                 </SelectTrigger>
                 <SelectContent>
-                  {(key === 'organization' ? organizations :
+                  {(key === 'organisatie' ? organisaties :
                     key === 'bron' ? bronnen :
                     themas).map((item) => (
                     <SelectItem key={item} value={item}>{item}</SelectItem>
@@ -100,17 +100,17 @@ const Index = () => {
         </div>
       </div>
 
-      <Button onClick={handleSearch} className="mb-4">Search</Button>
+      <Button onClick={handleZoeken} className="mb-4">Zoeken</Button>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {searchResults.map((result, index) => (
+        {zoekResultaten.map((resultaat, index) => (
           <Card key={index}>
             <CardHeader>
-              <CardTitle>{result.label}</CardTitle>
+              <CardTitle>{resultaat.label}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Type: {result.type}</p>
-              <p>Results: {result.count}</p>
+              <p>Type: {resultaat.type}</p>
+              <p>Resultaten: {resultaat.aantal}</p>
             </CardContent>
           </Card>
         ))}
