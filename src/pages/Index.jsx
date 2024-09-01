@@ -9,7 +9,7 @@ const Index = () => {
   const [freeTextSearch, setFreeTextSearch] = useState('');
   const [autocompleteSearch, setAutocompleteSearch] = useState('');
   const [facets, setFacets] = useState({
-    person: false,
+    thema: false,
     organization: false,
     place: false,
   });
@@ -18,7 +18,7 @@ const Index = () => {
   const handleSearch = () => {
     // Simulated search results (replace with actual API call)
     const mockResults = [
-      { type: 'Person', label: 'People', count: 15 },
+      { type: 'Thema', label: 'Themes', count: 15 },
       { type: 'Organization', label: 'Organizations', count: 8 },
       { type: 'Place', label: 'Places', count: 12 },
     ];
@@ -54,7 +54,9 @@ const Index = () => {
                 checked={value}
                 onCheckedChange={(checked) => setFacets({ ...facets, [key]: checked })}
               />
-              <Label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
+              <Label htmlFor={key}>
+                {key === 'thema' ? 'Thema' : key.charAt(0).toUpperCase() + key.slice(1)}
+              </Label>
             </div>
           ))}
         </div>
