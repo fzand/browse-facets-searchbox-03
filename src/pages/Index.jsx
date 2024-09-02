@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 
 const searchTypes = ["Vrije tekst", "Autocomplete"];
-
-const resultTypes = [
-  "Registraties", "Informatiemodellen", "Koppelsleutels", "Modelelementen",
-  "Catalogus", "Datasets", "Distributies", "Dataservices",
-  "Begrippenkaders", "Begrippen", "Organisaties", "Toon alles"
-];
 
 const fakeData = [
   "Amsterdam (Organisatie)", "Belastingdienst (Organisatie)", "Circulaire economie (Begrip)",
