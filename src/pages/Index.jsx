@@ -24,7 +24,7 @@ const fakeData = [
 const filterOptions = {
   thema: ["Economie", "Infrastructuur", "Milieu", "Onderwijs"],
   organisatie: ["Gemeente", "Provincie", "Rijksoverheid", "Waterschap"],
-  bron: ["CBS", "Kadaster", "RIVM", "RDW"]
+  bron: ["Informatiemodellen", "Datasets", "Begrippenkaders", "Doorzoek alles"]
 };
 
 const Index = () => {
@@ -35,8 +35,9 @@ const Index = () => {
   const [filters, setFilters] = useState({
     thema: [],
     organisatie: [],
-    bron: []
+    bron: ["Doorzoek alles"]
   });
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
@@ -44,13 +45,18 @@ const Index = () => {
         item.toLowerCase().includes(searchTerms["Autocomplete"].toLowerCase())
       );
       setSuggestions(filteredSuggestions);
+      setShowSuggestions(true);
     } else {
       setSuggestions([]);
+      setShowSuggestions(false);
     }
   }, [searchTerms["Autocomplete"]]);
 
   const handleInputChange = (type, value) => {
     setSearchTerms(prev => ({ ...prev, [type]: value }));
+    if (type === "Autocomplete") {
+      setShowSuggestions(true);
+    }
   };
 
   const handleZoeken = async () => {
@@ -63,16 +69,39 @@ const Index = () => {
   };
 
   const handleFilterChange = (category, item) => {
-    setFilters(prev => ({
-      ...prev,
-      [category]: prev[category].includes(item)
-        ? prev[category].filter(i => i !== item)
-        : [...prev[category], item]
-    }));
+    if (category === 'bron') {
+      if (item === 'Doorzoek alles') {
+        setFilters(prev => ({
+          ...prev,
+          [category]: ['Doorzoek alles']
+        }));
+      } else {
+        setFilters(prev => ({
+          ...prev,
+          [category]: prev[category].includes('Doorzoek alles')
+            ? [item]
+            : prev[category].includes(item)
+              ? prev[category].filter(i => i !== item)
+              : [...prev[category].filter(i => i !== 'Doorzoek alles'), item]
+        }));
+      }
+    } else {
+      setFilters(prev => ({
+        ...prev,
+        [category]: prev[category].includes(item)
+          ? prev[category].filter(i => i !== item)
+          : [...prev[category], item]
+      }));
+    }
   };
 
   const handleResultClick = (type) => {
     navigate(`/result/${type.toLowerCase()}`, { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerms(prev => ({ ...prev, "Autocomplete": suggestion }));
+    setShowSuggestions(false);
   };
 
   return (
@@ -89,13 +118,13 @@ const Index = () => {
               onChange={(e) => handleInputChange(type, e.target.value)}
               className="w-full p-2 border rounded"
             />
-            {type === "Autocomplete" && suggestions.length > 0 && (
+            {type === "Autocomplete" && showSuggestions && suggestions.length > 0 && (
               <ul className="absolute z-10 w-full bg-white border rounded mt-1">
                 {suggestions.map((item, idx) => (
                   <li 
                     key={idx} 
                     className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleInputChange(type, item)}
+                    onClick={() => handleSuggestionClick(item)}
                   >
                     {item}
                   </li>
