@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 
 const searchTypes = ["Vrije tekst", "Autocomplete"];
@@ -30,6 +31,7 @@ const Index = () => {
     bron: ["Doorzoek alles"]
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
@@ -52,7 +54,13 @@ const Index = () => {
   };
 
   const handleZoeken = async () => {
-    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
+    // Simulate search results
+    const fakeResults = [
+      { type: 'Persoon', label: 'Personen', aantal: 15 },
+      { type: 'Organisatie', label: 'Organisaties', aantal: 8 },
+      { type: 'Plaats', label: 'Plaatsen', aantal: 12 },
+    ];
+    setSearchResults(fakeResults);
   };
 
   const handleFilterChange = (category, item) => {
@@ -85,6 +93,10 @@ const Index = () => {
   const handleSuggestionClick = (suggestion) => {
     setSearchTerms(prev => ({ ...prev, "Autocomplete": suggestion }));
     setShowSuggestions(false);
+  };
+
+  const handleResultClick = () => {
+    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   return (
@@ -141,6 +153,21 @@ const Index = () => {
       <Button onClick={handleZoeken} className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
         Zoeken
       </Button>
+
+      {searchResults.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {searchResults.map((result, index) => (
+            <Card key={index} className="cursor-pointer" onClick={handleResultClick}>
+              <CardHeader>
+                <CardTitle>{result.label}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>Aantal: {result.aantal}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
