@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from 'react-router-dom';
 
 const searchTypes = ["Vrije tekst", "Autocomplete"];
 
@@ -27,6 +28,7 @@ const filterOptions = {
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [searchTerms, setSearchTerms] = useState(searchTypes.reduce((acc, type) => ({ ...acc, [type]: '' }), {}));
   const [suggestions, setSuggestions] = useState([]);
   const [zoekResultaten, setZoekResultaten] = useState({});
@@ -67,6 +69,10 @@ const Index = () => {
         ? prev[category].filter(i => i !== item)
         : [...prev[category], item]
     }));
+  };
+
+  const handleResultClick = (type) => {
+    navigate(`/result/${type.toLowerCase()}`, { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   return (
@@ -126,7 +132,7 @@ const Index = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {resultTypes.map((type, index) => (
-          <Card key={index} className="bg-white shadow-md">
+          <Card key={index} className="bg-white shadow-md cursor-pointer" onClick={() => handleResultClick(type)}>
             <CardContent className="p-4 flex flex-col justify-between h-full aspect-square">
               <h3 className="font-semibold text-lg mb-2">{type}</h3>
               <p className="text-2xl font-bold">{zoekResultaten[type] || 0}</p>
