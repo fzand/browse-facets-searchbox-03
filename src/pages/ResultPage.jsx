@@ -1,10 +1,9 @@
 import React from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
 const ResultPage = () => {
-  const { type } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const searchTerm = location.state?.searchTerm || '';
@@ -20,10 +19,18 @@ const ResultPage = () => {
     navigate('/');
   };
 
+  const handleCellClick = (type, value) => {
+    if (value > 1) {
+      navigate(`/result/${type.toLowerCase()}`, { state: { searchTerm } });
+    } else if (value === 1) {
+      navigate('/detail', { state: { type, searchTerm } });
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <Button onClick={handleBack} className="mb-4">Terug</Button>
-      <h1 className="text-3xl font-bold mb-6">{type.charAt(0).toUpperCase() + type.slice(1)}</h1>
+      <h1 className="text-3xl font-bold mb-6">Zoekresultaten</h1>
       <p className="mb-4">Gevonden met de zoekterm(en): "{searchTerm}"</p>
       
       <Table>
@@ -46,10 +53,10 @@ const ResultPage = () => {
               <TableCell>{result.naam}</TableCell>
               <TableCell>{result.fdsKeurmerk}</TableCell>
               <TableCell>{result.organisatie}</TableCell>
-              <TableCell className="bg-green-100">{result.informatiemodellen}</TableCell>
-              <TableCell className="bg-yellow-100">{result.koppelsleutels}</TableCell>
-              <TableCell className="bg-red-100">{result.datasets}</TableCell>
-              <TableCell className="bg-purple-100">{result.begrippenkaders}</TableCell>
+              <TableCell className="bg-green-100 cursor-pointer" onClick={() => handleCellClick('Informatiemodellen', result.informatiemodellen)}>{result.informatiemodellen}</TableCell>
+              <TableCell className="bg-yellow-100 cursor-pointer" onClick={() => handleCellClick('Koppelsleutels', result.koppelsleutels)}>{result.koppelsleutels}</TableCell>
+              <TableCell className="bg-red-100 cursor-pointer" onClick={() => handleCellClick('Datasets', result.datasets)}>{result.datasets}</TableCell>
+              <TableCell className="bg-purple-100 cursor-pointer" onClick={() => handleCellClick('Begrippenkaders', result.begrippenkaders)}>{result.begrippenkaders}</TableCell>
             </TableRow>
           ))}
         </TableBody>

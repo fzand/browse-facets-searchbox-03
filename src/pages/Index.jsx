@@ -31,7 +31,6 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchTerms, setSearchTerms] = useState(searchTypes.reduce((acc, type) => ({ ...acc, [type]: '' }), {}));
   const [suggestions, setSuggestions] = useState([]);
-  const [zoekResultaten, setZoekResultaten] = useState({});
   const [filters, setFilters] = useState({
     thema: [],
     organisatie: [],
@@ -60,12 +59,7 @@ const Index = () => {
   };
 
   const handleZoeken = async () => {
-    // Simulate API call
-    const results = {};
-    resultTypes.forEach(type => {
-      results[type] = Math.floor(Math.random() * 100) + 1;
-    });
-    setZoekResultaten(results);
+    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   const handleFilterChange = (category, item) => {
@@ -93,10 +87,6 @@ const Index = () => {
           : [...prev[category], item]
       }));
     }
-  };
-
-  const handleResultClick = (type) => {
-    navigate(`/result/${type.toLowerCase()}`, { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -158,17 +148,6 @@ const Index = () => {
       <Button onClick={handleZoeken} className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
         Zoeken
       </Button>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {resultTypes.map((type, index) => (
-          <Card key={index} className="bg-white shadow-md cursor-pointer" onClick={() => handleResultClick(type)}>
-            <CardContent className="p-4 flex flex-col justify-between h-full aspect-square">
-              <h3 className="font-semibold text-lg mb-2">{type}</h3>
-              <p className="text-2xl font-bold">{zoekResultaten[type] || 0}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
     </div>
   );
 };
