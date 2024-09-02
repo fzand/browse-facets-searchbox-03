@@ -1,139 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 
-// Mock function to simulate querying a linked data graph
-const queryLinkedDataGraph = async (query, facets) => {
-  // Simulating an API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+const searchTypes = [
+  "Registraties", "Informatiemodellen", "Koppelsleutels", "Modelelementen",
+  "Catalogus", "Datasets", "Distributies", "Dataservices",
+  "Begrippenkaders", "Begrippen", "Organisaties", "Toon alles"
+];
 
-  // Mock data
-  const mockData = [
-    { label: 'Thema\'s', aantal: Math.floor(Math.random() * 20) + 1 },
-    { label: 'Organisaties', aantal: Math.floor(Math.random() * 15) + 1 },
-    { label: 'Bronnen', aantal: Math.floor(Math.random() * 10) + 1 },
-  ];
-
-  // Filter based on query and facets
-  return mockData.map(item => ({
-    ...item,
-    aantal: item.aantal - (query.length + Object.values(facets).filter(Boolean).length)
-  })).filter(item => item.aantal > 0);
-};
+const fakeData = [
+  "Amsterdam (Organisatie)", "Belastingdienst (Organisatie)", "Circulaire economie (Begrip)",
+  "Datamodel (Informatiemodel)", "Energielabel (Registratie)", "Fietspad (Modelelement)",
+  "Gemeente (Organisatie)", "Huisnummer (Koppelsleutel)", "Inkomen (Begrip)",
+  "Kadaster (Organisatie)", "Luchtkwaliteit (Dataset)", "Ministerie van BZK (Organisatie)"
+];
 
 const Index = () => {
-  const [vrijeTekstZoeken, setVrijeTekstZoeken] = useState('');
-  const [autocompleteZoeken, setAutocompleteZoeken] = useState('');
-  const [facetten, setFacetten] = useState({
-    thema: '',
-    organisatie: '',
-    bron: '',
-  });
+  const [searchTerms, setSearchTerms] = useState(searchTypes.reduce((acc, type) => ({ ...acc, [type]: '' }), {}));
+  const [suggestions, setSuggestions] = useState({});
   const [zoekResultaten, setZoekResultaten] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const organisaties = [
-    "TechInnovatie BV",
-    "GroeneAarde Oplossingen",
-    "Wereldgezondheid Initiatief",
-    "FinanciënWijs Groep",
-    "OnderwijsToekomst Academie",
-    "AmbachtKunst Collectief",
-    "RuimteReis Ondernemingen"
-  ];
+  useEffect(() => {
+    Object.keys(searchTerms).forEach(type => {
+      if (searchTerms[type]) {
+        const filteredSuggestions = fakeData.filter(item => 
+          item.toLowerCase().includes(searchTerms[type].toLowerCase())
+        );
+        setSuggestions(prev => ({ ...prev, [type]: filteredSuggestions }));
+      } else {
+        setSuggestions(prev => ({ ...prev, [type]: [] }));
+      }
+    });
+  }, [searchTerms]);
 
-  const bronnen = [
-    "Begrippenkaders",
-    "Informatiemodellen",
-    "Datasets"
-  ];
-
-  const themas = [
-    "Klimaatverandering",
-    "Digitale Transformatie",
-    "Duurzame Energie",
-    "Kunstmatige Intelligentie",
-    "Biodiversiteit",
-    "Circulaire Economie",
-    "Slimme Steden",
-    "Gezondheidszorg Innovatie",
-    "Ruimte-exploratie",
-    "Oceaanbehoud",
-    "Voedselzekerheid",
-    "Cyberveiligheid"
-  ];
+  const handleInputChange = (type, value) => {
+    setSearchTerms(prev => ({ ...prev, [type]: value }));
+  };
 
   const handleZoeken = async () => {
-    setIsLoading(true);
-    try {
-      const resultaten = await queryLinkedDataGraph(vrijeTekstZoeken, facetten);
-      setZoekResultaten(resultaten);
-    } catch (error) {
-      console.error("Error searching linked data graph:", error);
-      // Handle error (e.g., show error message to user)
-    } finally {
-      setIsLoading(false);
-    }
+    // Simulate API call
+    const results = Object.entries(searchTerms)
+      .filter(([type, term]) => term && type !== "Toon alles")
+      .map(([type, term]) => ({
+        type,
+        aantal: Math.floor(Math.random() * 100) + 1
+      }));
+    setZoekResultaten(results);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">PoC federatieve catalogus</h1>
+    <div className="container mx-auto p-4 bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6 text-blue-600">PoC federatieve catalogus</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <Input
-          type="text"
-          placeholder="Vrije tekst zoeken"
-          value={vrijeTekstZoeken}
-          onChange={(e) => setVrijeTekstZoeken(e.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Autocomplete zoeken"
-          value={autocompleteZoeken}
-          onChange={(e) => setAutocompleteZoeken(e.target.value)}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        {searchTypes.map((type, index) => (
+          <div key={index} className="relative">
+            <Input
+              type="text"
+              placeholder={type}
+              value={searchTerms[type]}
+              onChange={(e) => handleInputChange(type, e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+            {suggestions[type] && suggestions[type].length > 0 && (
+              <ul className="absolute z-10 w-full bg-white border rounded mt-1">
+                {suggestions[type].map((item, idx) => (
+                  <li 
+                    key={idx} 
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleInputChange(type, item)}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
       </div>
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Facet Zoeken</h2>
-        <div className="flex flex-wrap gap-4">
-          {Object.entries(facetten).map(([key, value]) => (
-            <div key={key} className="flex items-center space-x-2">
-              <Label htmlFor={key} className="w-24">
-                {key.charAt(0).toUpperCase() + key.slice(1)}:
-              </Label>
-              <Select onValueChange={(value) => setFacetten({ ...facetten, [key]: value })}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={`Selecteer ${key}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {(key === 'organisatie' ? organisaties :
-                    key === 'bron' ? bronnen :
-                    themas).map((item) => (
-                    <SelectItem key={item} value={item}>{item}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Button onClick={handleZoeken} className="mb-4" disabled={isLoading}>
-        {isLoading ? 'Zoeken...' : 'Zoeken'}
+      <Button onClick={handleZoeken} className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Zoeken
       </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {zoekResultaten.map((resultaat, index) => (
-          <Card key={index}>
-            <CardHeader>
-              <CardTitle>{resultaat.label}</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <Card key={index} className="bg-white shadow-md">
+            <CardContent className="p-4">
+              <h3 className="font-semibold text-lg mb-2">{resultaat.type}</h3>
               <p>Resultaten: {resultaat.aantal}</p>
             </CardContent>
           </Card>
