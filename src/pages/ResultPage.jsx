@@ -9,6 +9,7 @@ const ResultPage = () => {
   const navigate = useNavigate();
   const { type } = useParams();
   const searchTerm = location.state?.searchTerm || '';
+  const boxName = location.state?.boxName || '';
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
 
@@ -41,7 +42,12 @@ const ResultPage = () => {
 
   const handleCellClick = (clickedType, value) => {
     if (value > 1) {
-      navigate(`/result/${clickedType.toLowerCase()}`, { state: { searchTerm } });
+      navigate(`/result/${clickedType.toLowerCase()}`, { 
+        state: { 
+          searchTerm,
+          boxName: clickedType
+        } 
+      });
     } else if (value === 1) {
       navigate('/detail', { state: { type: clickedType, searchTerm } });
     }
@@ -76,7 +82,7 @@ const ResultPage = () => {
   return (
     <div className="container mx-auto p-4">
       <Button onClick={handleBack} className="mb-4">Terug</Button>
-      <h1 className="text-3xl font-bold mb-6">Zoekresultaten {type ? `voor ${type}` : ''}</h1>
+      <h1 className="text-3xl font-bold mb-6">Zoekresultaten voor {boxName}</h1>
       <p className="mb-4">Gevonden met de zoekterm(en): "{searchTerm}"</p>
       
       <Table>

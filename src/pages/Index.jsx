@@ -68,7 +68,13 @@ const Index = () => {
   };
 
   const handleResultBoxClick = (box) => {
-    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], resultType: box } });
+    navigate('/result', { 
+      state: { 
+        searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], 
+        resultType: box,
+        boxName: box
+      } 
+    });
   };
 
   const handleFilterChange = (category, item) => {
