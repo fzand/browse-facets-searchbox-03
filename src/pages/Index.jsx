@@ -9,9 +9,18 @@ import { useNavigate } from 'react-router-dom';
 const searchTypes = ["Vrije tekst", "Autocomplete"];
 
 const fakeData = [
-  "Amsterdam", "Belastingdienst", "Circulaire economie", "Datamodel",
-  "Energielabel", "Fietspad", "Gemeente", "Huisnummer", "Inkomen",
-  "Kadaster", "Luchtkwaliteit", "Ministerie van BZK"
+  { term: "Amsterdam", type: "Plaats" },
+  { term: "Belastingdienst", type: "Organisatie" },
+  { term: "Circulaire economie", type: "Begrip" },
+  { term: "Datamodel", type: "Informatiemodel" },
+  { term: "Energielabel", type: "Modelelement" },
+  { term: "Fietspad", type: "Modelelement" },
+  { term: "Gemeente", type: "Organisatie" },
+  { term: "Huisnummer", type: "Modelelement" },
+  { term: "Inkomen", type: "Begrip" },
+  { term: "Kadaster", type: "Organisatie" },
+  { term: "Luchtkwaliteit", type: "Dataset" },
+  { term: "Ministerie van BZK", type: "Organisatie" }
 ];
 
 const resultBoxes = [
@@ -41,7 +50,7 @@ const Index = () => {
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
       const filteredSuggestions = fakeData.filter(item => 
-        item.toLowerCase().includes(searchTerms["Autocomplete"].toLowerCase())
+        item.term.toLowerCase().includes(searchTerms["Autocomplete"].toLowerCase())
       );
       setSuggestions(filteredSuggestions);
       setShowSuggestions(true);
@@ -105,7 +114,7 @@ const Index = () => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerms(prev => ({ ...prev, "Autocomplete": suggestion }));
+    setSearchTerms(prev => ({ ...prev, "Autocomplete": suggestion.term }));
     setShowSuggestions(false);
   };
 
@@ -131,7 +140,7 @@ const Index = () => {
                     className="p-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleSuggestionClick(item)}
                   >
-                    {item}
+                    {item.term} ({item.type})
                   </li>
                 ))}
               </ul>
