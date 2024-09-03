@@ -13,10 +13,10 @@ const DetailPage = () => {
 
   // Fictitious data
   const detailData = {
-    naam: "Dataset",
+    naam: "Gedetailleerde informatie",
     type: type || "Onbekend type",
     datum: "2024-03-15",
-    toelichting: "Dit is een dataset met gedetailleerde informatie over verschillende aspecten van stedelijke ontwikkeling in Nederland.",
+    toelichting: "Dit is een gedetailleerde weergave met informatie over verschillende aspecten van stedelijke ontwikkeling in Nederland.",
     eigenaar: "Ministerie van Binnenlandse Zaken en Koninkrijksrelaties",
     versie: "2.1",
     updateFrequentie: "Jaarlijks",
