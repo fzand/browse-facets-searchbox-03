@@ -36,6 +36,7 @@ const Index = () => {
     bron: ["Doorzoek alles"]
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchResults, setSearchResults] = useState({});
 
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
@@ -58,7 +59,16 @@ const Index = () => {
   };
 
   const handleZoeken = () => {
-    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
+    // Generate fake search results
+    const fakeResults = resultBoxes.reduce((acc, box) => {
+      acc[box] = Math.floor(Math.random() * 100);
+      return acc;
+    }, {});
+    setSearchResults(fakeResults);
+  };
+
+  const handleResultBoxClick = (box) => {
+    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], resultType: box } });
   };
 
   const handleFilterChange = (category, item) => {
@@ -150,12 +160,12 @@ const Index = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         {resultBoxes.map((box, index) => (
-          <Card key={index} className="cursor-pointer" onClick={handleZoeken}>
+          <Card key={index} className="cursor-pointer" onClick={() => handleResultBoxClick(box)}>
             <CardHeader>
               <CardTitle>{box}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Aantal: {Math.floor(Math.random() * 100)}</p>
+              <p>Aantal: {searchResults[box] || 0}</p>
             </CardContent>
           </Card>
         ))}
