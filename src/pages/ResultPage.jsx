@@ -16,6 +16,8 @@ const ResultPage = () => {
     { type: 'Basisregistratie', naam: 'BRTQ', fdsKeurmerk: 'Nee', organisatie: 'BZK', informatiemodellen: 1, koppelsleutels: 0, datasets: 1, begrippenkaders: 1 },
     { type: 'Basisregistratie', naam: 'BRLO', fdsKeurmerk: 'Ja', organisatie: 'BZK', informatiemodellen: 2, koppelsleutels: 1, datasets: 5, begrippenkaders: 4 },
     { type: 'Sectorregistratie', naam: 'SRRM', fdsKeurmerk: 'Ja', organisatie: 'DUO', informatiemodellen: 1, koppelsleutels: 0, datasets: 2, begrippenkaders: 2 },
+    { type: 'Catalogus', naam: 'CATL', fdsKeurmerk: 'Nee', organisatie: 'RWS', informatiemodellen: 3, koppelsleutels: 2, datasets: 7, begrippenkaders: 3 },
+    { type: 'Dataset', naam: 'DSTW', fdsKeurmerk: 'Ja', organisatie: 'CBS', informatiemodellen: 0, koppelsleutels: 1, datasets: 1, begrippenkaders: 1 },
   ]);
 
   const handleBack = () => {

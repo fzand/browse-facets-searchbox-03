@@ -11,18 +11,58 @@ const DetailPage = () => {
     navigate(-1);
   };
 
+  // Fictitious data
+  const detailData = {
+    naam: "Voorbeeld Dataset",
+    type: type || "Onbekend type",
+    datum: "2024-03-15",
+    toelichting: "Dit is een voorbeeld dataset met gedetailleerde informatie over verschillende aspecten van stedelijke ontwikkeling in Nederland.",
+    eigenaar: "Ministerie van Binnenlandse Zaken en Koninkrijksrelaties",
+    versie: "2.1",
+    updateFrequentie: "Jaarlijks",
+    themas: ["Ruimtelijke ordening", "Demografie", "Economie"],
+    datumLaatsteUpdate: "2024-01-10",
+    licentie: "CC BY 4.0",
+    contactpersoon: "Jan Jansen",
+    email: "jan.jansen@example.gov.nl",
+    telefoon: "+31 70 123 4567",
+  };
+
   return (
     <div className="container mx-auto p-4">
       <Button onClick={handleBack} className="mb-4">Terug</Button>
-      <h1 className="text-3xl font-bold mb-6">Detail Pagina: {type}</h1>
+      <h1 className="text-3xl font-bold mb-6">Detail Pagina: {detailData.type}</h1>
       <p className="mb-4">Zoekterm: {searchTerm}</p>
       
-      <div className="bg-yellow-100 p-4 rounded-lg">
-        <h2 className="text-xl font-semibold mb-2">Informatiemodel</h2>
-        <h3 className="text-lg font-medium">Zoetwater</h3>
-        <p className="mt-2">
-          Tetris is een computerspel dat in 1984 bedacht is door Aleksej Pazjitnov, destijds werkzaam bij de Academie voor Wetenschappen van de Sovjet-Unie. De naam Tetris is een samenstelling van de Griekse telwoorden tetra (vier) en tennis, Pazjitnovs favoriete sport. In 1989 zag een eerste Game Boy-versie van Tetris het levenslicht. Het spel werd een enorm succes en wordt gezien als een van de beste en meest verslavende spellen aller tijden. Tetris is een puzzelspel. Het doel van het spel is zoveel mogelijk punten te scoren door horizontale rijen te vormen in een veld, zonder dat het veld volloopt. Dit gebeurt door vallende stukken, elk opgebouwd uit vier vierkantjes, zo te draaien dat ze precies in het veld passen. Tetris is een van de bestverkochte computerspellen ooit. Sinds de introductie zijn er meer dan 170 miljoen exemplaren over de toonbank gegaan, waarvan 70 miljoen fysieke kopieën en meer dan 100 miljoen betaalde downloads op mobiele telefoons. De Game Boy-versie alleen al is meer dan 35 miljoen keer verkocht.
-        </p>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">{detailData.naam}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p><strong>Datum:</strong> {detailData.datum}</p>
+            <p><strong>Eigenaar:</strong> {detailData.eigenaar}</p>
+            <p><strong>Versie:</strong> {detailData.versie}</p>
+            <p><strong>Update frequentie:</strong> {detailData.updateFrequentie}</p>
+            <p><strong>Datum laatste update:</strong> {detailData.datumLaatsteUpdate}</p>
+          </div>
+          <div>
+            <p><strong>Licentie:</strong> {detailData.licentie}</p>
+            <p><strong>Contactpersoon:</strong> {detailData.contactpersoon}</p>
+            <p><strong>Email:</strong> {detailData.email}</p>
+            <p><strong>Telefoon:</strong> {detailData.telefoon}</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold mb-2">Toelichting</h3>
+          <p>{detailData.toelichting}</p>
+        </div>
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold mb-2">Thema's</h3>
+          <ul className="list-disc list-inside">
+            {detailData.themas.map((thema, index) => (
+              <li key={index}>{thema}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

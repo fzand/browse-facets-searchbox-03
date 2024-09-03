@@ -9,10 +9,15 @@ import { useNavigate } from 'react-router-dom';
 const searchTypes = ["Vrije tekst", "Autocomplete"];
 
 const fakeData = [
-  "Amsterdam (Organisatie)", "Belastingdienst (Organisatie)", "Circulaire economie (Begrip)",
-  "Datamodel (Informatiemodel)", "Energielabel (Registratie)", "Fietspad (Modelelement)",
-  "Gemeente (Organisatie)", "Huisnummer (Koppelsleutel)", "Inkomen (Begrip)",
-  "Kadaster (Organisatie)", "Luchtkwaliteit (Dataset)", "Ministerie van BZK (Organisatie)"
+  "Amsterdam", "Belastingdienst", "Circulaire economie", "Datamodel",
+  "Energielabel", "Fietspad", "Gemeente", "Huisnummer", "Inkomen",
+  "Kadaster", "Luchtkwaliteit", "Ministerie van BZK"
+];
+
+const resultBoxes = [
+  "Registraties", "Informatiemodellen", "Koppelsleutels", "Modelelementen",
+  "Catalogus", "Datasets", "Distributies", "Dataservices",
+  "Begrippenkaders", "Begrippen", "Organisaties", "Toon alles"
 ];
 
 const filterOptions = {
@@ -31,7 +36,6 @@ const Index = () => {
     bron: ["Doorzoek alles"]
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
@@ -53,14 +57,8 @@ const Index = () => {
     }
   };
 
-  const handleZoeken = async () => {
-    // Simulate search results
-    const fakeResults = [
-      { type: 'Persoon', label: 'Personen', aantal: 15 },
-      { type: 'Organisatie', label: 'Organisaties', aantal: 8 },
-      { type: 'Plaats', label: 'Plaatsen', aantal: 12 },
-    ];
-    setSearchResults(fakeResults);
+  const handleZoeken = () => {
+    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   const handleFilterChange = (category, item) => {
@@ -93,10 +91,6 @@ const Index = () => {
   const handleSuggestionClick = (suggestion) => {
     setSearchTerms(prev => ({ ...prev, "Autocomplete": suggestion }));
     setShowSuggestions(false);
-  };
-
-  const handleResultClick = () => {
-    navigate('/result', { state: { searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"] } });
   };
 
   return (
@@ -154,20 +148,18 @@ const Index = () => {
         Zoeken
       </Button>
 
-      {searchResults.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {searchResults.map((result, index) => (
-            <Card key={index} className="cursor-pointer" onClick={handleResultClick}>
-              <CardHeader>
-                <CardTitle>{result.label}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Aantal: {result.aantal}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        {resultBoxes.map((box, index) => (
+          <Card key={index} className="cursor-pointer" onClick={handleZoeken}>
+            <CardHeader>
+              <CardTitle>{box}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Aantal: {Math.floor(Math.random() * 100)}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
