@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
@@ -7,28 +7,43 @@ import { ArrowUpDown } from "lucide-react";
 const ResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { type } = useParams();
   const searchTerm = location.state?.searchTerm || '';
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  // Fake data for demonstration
-  const [results, setResults] = useState([
-    { type: 'Basisregistratie', naam: 'BRTQ', fdsKeurmerk: 'Nee', organisatie: 'BZK', informatiemodellen: 1, koppelsleutels: 0, datasets: 1, begrippenkaders: 1 },
-    { type: 'Basisregistratie', naam: 'BRLO', fdsKeurmerk: 'Ja', organisatie: 'BZK', informatiemodellen: 2, koppelsleutels: 1, datasets: 5, begrippenkaders: 4 },
-    { type: 'Sectorregistratie', naam: 'SRRM', fdsKeurmerk: 'Ja', organisatie: 'DUO', informatiemodellen: 1, koppelsleutels: 0, datasets: 2, begrippenkaders: 2 },
-    { type: 'Catalogus', naam: 'CATL', fdsKeurmerk: 'Nee', organisatie: 'RWS', informatiemodellen: 3, koppelsleutels: 2, datasets: 7, begrippenkaders: 3 },
-    { type: 'Dataset', naam: 'DSTW', fdsKeurmerk: 'Ja', organisatie: 'CBS', informatiemodellen: 0, koppelsleutels: 1, datasets: 1, begrippenkaders: 1 },
-  ]);
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    // Generate fake data based on the type
+    const generateFakeData = () => {
+      const types = ['Basisregistratie', 'Sectorregistratie', 'Catalogus', 'Dataset'];
+      const organizations = ['BZK', 'DUO', 'RWS', 'CBS', 'IND', 'UWV'];
+      
+      return Array.from({ length: 5 }, (_, index) => ({
+        type: type ? type : types[Math.floor(Math.random() * types.length)],
+        naam: `${type || 'Item'}-${index + 1}`,
+        fdsKeurmerk: Math.random() > 0.5 ? 'Ja' : 'Nee',
+        organisatie: organizations[Math.floor(Math.random() * organizations.length)],
+        informatiemodellen: Math.floor(Math.random() * 5),
+        koppelsleutels: Math.floor(Math.random() * 3),
+        datasets: Math.floor(Math.random() * 10),
+        begrippenkaders: Math.floor(Math.random() * 5),
+      }));
+    };
+
+    setResults(generateFakeData());
+  }, [type]);
 
   const handleBack = () => {
     navigate('/');
   };
 
-  const handleCellClick = (type, value) => {
+  const handleCellClick = (clickedType, value) => {
     if (value > 1) {
-      navigate(`/result/${type.toLowerCase()}`, { state: { searchTerm } });
+      navigate(`/result/${clickedType.toLowerCase()}`, { state: { searchTerm } });
     } else if (value === 1) {
-      navigate('/detail', { state: { type, searchTerm } });
+      navigate('/detail', { state: { type: clickedType, searchTerm } });
     }
   };
 
@@ -61,7 +76,7 @@ const ResultPage = () => {
   return (
     <div className="container mx-auto p-4">
       <Button onClick={handleBack} className="mb-4">Terug</Button>
-      <h1 className="text-3xl font-bold mb-6">Zoekresultaten</h1>
+      <h1 className="text-3xl font-bold mb-6">Zoekresultaten {type ? `voor ${type}` : ''}</h1>
       <p className="mb-4">Gevonden met de zoekterm(en): "{searchTerm}"</p>
       
       <Table>
