@@ -3,6 +3,15 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const ResultPage = () => {
   const location = useLocation();
@@ -13,6 +22,7 @@ const ResultPage = () => {
   const cellValue = location.state?.cellValue || 5; // Default to 5 if not provided
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
+  const [showNoResultAlert, setShowNoResultAlert] = useState(false);
 
   const [results, setResults] = useState([]);
 
@@ -42,7 +52,9 @@ const ResultPage = () => {
   };
 
   const handleCellClick = (clickedType, value) => {
-    if (value > 1) {
+    if (value === 0) {
+      setShowNoResultAlert(true);
+    } else if (value > 1) {
       navigate(`/result/${clickedType.toLowerCase()}`, { 
         state: { 
           searchTerm,
@@ -115,6 +127,20 @@ const ResultPage = () => {
           ))}
         </TableBody>
       </Table>
+
+      <AlertDialog open={showNoResultAlert} onOpenChange={setShowNoResultAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Geen resultaat</AlertDialogTitle>
+            <AlertDialogDescription>
+              Er zijn geen resultaten gevonden voor deze selectie.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Sluiten</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

@@ -5,6 +5,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const searchTypes = ["Vrije tekst", "Autocomplete"];
 
@@ -46,6 +55,7 @@ const Index = () => {
   });
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchResults, setSearchResults] = useState({});
+  const [showNoResultAlert, setShowNoResultAlert] = useState(false);
 
   useEffect(() => {
     if (searchTerms["Autocomplete"]) {
@@ -77,13 +87,18 @@ const Index = () => {
   };
 
   const handleResultBoxClick = (box) => {
-    navigate('/result', { 
-      state: { 
-        searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], 
-        resultType: box,
-        boxName: box
-      } 
-    });
+    if (searchResults[box] === 0) {
+      setShowNoResultAlert(true);
+    } else {
+      navigate('/result', { 
+        state: { 
+          searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], 
+          resultType: box,
+          boxName: box,
+          cellValue: searchResults[box]
+        } 
+      });
+    }
   };
 
   const handleFilterChange = (category, item) => {
@@ -185,6 +200,20 @@ const Index = () => {
           </Card>
         ))}
       </div>
+
+      <AlertDialog open={showNoResultAlert} onOpenChange={setShowNoResultAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Geen resultaat</AlertDialogTitle>
+            <AlertDialogDescription>
+              Er zijn geen resultaten gevonden voor deze selectie.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Sluiten</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
