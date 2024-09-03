@@ -10,18 +10,19 @@ const ResultPage = () => {
   const { type } = useParams();
   const searchTerm = location.state?.searchTerm || '';
   const boxName = location.state?.boxName || '';
+  const cellValue = location.state?.cellValue || 5; // Default to 5 if not provided
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
 
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    // Generate fake data based on the type
+    // Generate fake data based on the type and cellValue
     const generateFakeData = () => {
       const types = ['Basisregistratie', 'Sectorregistratie', 'Catalogus', 'Dataset'];
       const organizations = ['BZK', 'DUO', 'RWS', 'CBS', 'IND', 'UWV'];
       
-      return Array.from({ length: 5 }, (_, index) => ({
+      return Array.from({ length: cellValue }, (_, index) => ({
         type: type ? type : types[Math.floor(Math.random() * types.length)],
         naam: `${type || 'Item'}-${index + 1}`,
         fdsKeurmerk: Math.random() > 0.5 ? 'Ja' : 'Nee',
@@ -34,7 +35,7 @@ const ResultPage = () => {
     };
 
     setResults(generateFakeData());
-  }, [type]);
+  }, [type, cellValue]);
 
   const handleBack = () => {
     navigate('/');
@@ -45,7 +46,8 @@ const ResultPage = () => {
       navigate(`/result/${clickedType.toLowerCase()}`, { 
         state: { 
           searchTerm,
-          boxName: clickedType
+          boxName: clickedType,
+          cellValue: value
         } 
       });
     } else if (value === 1) {
@@ -93,7 +95,7 @@ const ResultPage = () => {
             <SortableHeader column="fdsKeurmerk">FDS-keurmerk</SortableHeader>
             <SortableHeader column="organisatie">Organisatie</SortableHeader>
             <TableHead className="bg-green-500 text-white">Informatiemodellen</TableHead>
-            <TableHead className="bg-yellow-500 text-white">Koppelsleutels</TableHead>
+            <TableHead className="bg-green-500 text-white">Koppelsleutels</TableHead>
             <TableHead className="bg-red-500 text-white">Datasets</TableHead>
             <TableHead className="bg-purple-500 text-white">Begrippenkaders</TableHead>
           </TableRow>
@@ -106,7 +108,7 @@ const ResultPage = () => {
               <TableCell>{result.fdsKeurmerk}</TableCell>
               <TableCell>{result.organisatie}</TableCell>
               <TableCell className="bg-green-100 cursor-pointer" onClick={() => handleCellClick('Informatiemodellen', result.informatiemodellen)}>{result.informatiemodellen}</TableCell>
-              <TableCell className="bg-yellow-100 cursor-pointer" onClick={() => handleCellClick('Koppelsleutels', result.koppelsleutels)}>{result.koppelsleutels}</TableCell>
+              <TableCell className="bg-green-100 cursor-pointer" onClick={() => handleCellClick('Koppelsleutels', result.koppelsleutels)}>{result.koppelsleutels}</TableCell>
               <TableCell className="bg-red-100 cursor-pointer" onClick={() => handleCellClick('Datasets', result.datasets)}>{result.datasets}</TableCell>
               <TableCell className="bg-purple-100 cursor-pointer" onClick={() => handleCellClick('Begrippenkaders', result.begrippenkaders)}>{result.begrippenkaders}</TableCell>
             </TableRow>
