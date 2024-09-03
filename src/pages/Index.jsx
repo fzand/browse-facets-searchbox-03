@@ -95,7 +95,8 @@ const Index = () => {
           searchTerm: searchTerms["Vrije tekst"] || searchTerms["Autocomplete"], 
           resultType: box,
           boxName: box,
-          cellValue: searchResults[box]
+          cellValue: searchResults[box],
+          isAutocomplete: !!searchTerms["Autocomplete"]
         } 
       });
     }

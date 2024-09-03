@@ -20,6 +20,7 @@ const ResultPage = () => {
   const searchTerm = location.state?.searchTerm || '';
   const boxName = location.state?.boxName || '';
   const cellValue = location.state?.cellValue || 5; // Default to 5 if not provided
+  const isAutocomplete = location.state?.isAutocomplete || false;
   const [sortColumn, setSortColumn] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
   const [showNoResultAlert, setShowNoResultAlert] = useState(false);
@@ -59,7 +60,8 @@ const ResultPage = () => {
         state: { 
           searchTerm,
           boxName: clickedType,
-          cellValue: value
+          cellValue: value,
+          isAutocomplete
         } 
       });
     } else if (value === 1) {
@@ -93,11 +95,22 @@ const ResultPage = () => {
     </TableHead>
   );
 
+  const renderSearchInfo = () => {
+    if (isAutocomplete) {
+      const fakeUrl = `https://test.example.com/${searchTerm.toLowerCase()}`;
+      return (
+        <p className="mb-4">Gevonden met de resource: <a href={fakeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{fakeUrl}</a> ({searchTerm})</p>
+      );
+    } else {
+      return <p className="mb-4">Gevonden met de zoekterm(en): "{searchTerm}"</p>;
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <Button onClick={handleBack} className="mb-4">Terug</Button>
       <h1 className="text-3xl font-bold mb-6">Zoekresultaten voor {boxName}</h1>
-      <p className="mb-4">Gevonden met de zoekterm(en): "{searchTerm}"</p>
+      {renderSearchInfo()}
       
       <Table>
         <TableHeader>
